@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faKitchenSet, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { faKitchenSet, faCirclePlus, faHatChef } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Home.css';
 
 function Home() {
-  const { isChef } = useAuth();
+  const { isChef, user } = useAuth();
 
   return (
     <div className="home-container">
@@ -30,6 +30,17 @@ function Home() {
           </Link>
         )}
       </div>
+
+      {!user && (
+        <div className="login-prompt">
+          <FontAwesomeIcon icon={faKitchenSet} className="prompt-icon" />
+          <p>Log in as a chef to create and share your own recipes!</p>
+          <div className="prompt-buttons">
+            <Link to="/login" className="prompt-button">Login</Link>
+            <Link to="/register" className="prompt-button">Register</Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
