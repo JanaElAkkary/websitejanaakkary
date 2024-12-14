@@ -1,3 +1,4 @@
+
 -- Insert sample users
 INSERT INTO users (email, password, fullname, role) VALUES
 ('chef@example.com', '$2a$10$XgXB8mXEVx6A.nj0tGGqK.7nL6gX4TzPFyX5ZvzIZ3L6tZJ1vKj2', 'Master Chef', 'chef'),

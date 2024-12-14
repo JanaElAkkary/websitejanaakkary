@@ -1,3 +1,4 @@
+
 -- Update Classic Chocolate Cake
 UPDATE recipe SET
     description = 'A rich, moist chocolate cake with deep chocolate flavor and smooth, creamy frosting. Perfect for special occasions or whenever you need a decadent dessert.',
