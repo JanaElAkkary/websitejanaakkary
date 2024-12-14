@@ -1,0 +1,100 @@
+:root {
+  --primary-color: #A7D1FF;
+  --secondary-color: #4ecdc4;
+  --dark-color: #2d3436;
+  --light-color: #f9f9f9;
+  --danger-color: #ff7675;
+  --success-color: #55efc4;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--light-color);
+  color: var(--dark-color);
+}
+
+.App {
+  text-align: center;
+  color: #333333;
+}
+
+.App-header {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  background-color: #F0F8FF;
+}
+
+main {
+  min-height: calc(100vh - 60px);
+  padding: 2rem 0;
+  background-color: #FFFFFF;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Navbar Styles */
+.navbar {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+  color: var(--primary-color) !important;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+/* Card Styles */
+.recipe-card {
+  transition: transform 0.2s;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.recipe-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Button Styles */
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: #89BEFF;
+  border-color: #89BEFF;
+}
+
+/* Form Styles */
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(167, 209, 255, 0.25);
+}
+
+/* Profile Section */
+.profile-section {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Links */
+a {
+  color: #A7D1FF;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #89BEFF;
+}
