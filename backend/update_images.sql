@@ -1,3 +1,4 @@
+
 UPDATE recipe SET image_url = '/images/14-Nuts-and-Seeds-Mix.jpg' WHERE title LIKE '%Nuts and Seeds%';
 UPDATE recipe SET image_url = '/images/1-Grilled-Chicken-Breast-with-Herbs.jpg' WHERE title LIKE '%Grilled Chicken Breast%';
 UPDATE recipe SET image_url = '/images/2-Pan-Seared-Salmon-with-Lemon.jpg' WHERE title LIKE '%Baked Salmon%';

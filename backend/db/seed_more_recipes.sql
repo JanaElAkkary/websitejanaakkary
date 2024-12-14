@@ -1,3 +1,4 @@
+
 -- Insert more recipes
 INSERT INTO recipe (
     title, description, ingredients, instructions, prep_time, cook_time, 
