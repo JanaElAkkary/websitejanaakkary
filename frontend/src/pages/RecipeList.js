@@ -15,12 +15,12 @@ function RecipeList() {
 
   const categories = [
     { value: '', label: 'All Categories' },
-    { value: 'Breakfast', label: 'Breakfast' },
-    { value: 'Main Dish', label: 'Main Dish' },
-    { value: 'Salad', label: 'Salad' },
-    { value: 'Dessert', label: 'Dessert' },
-    { value: 'Healthy', label: 'Healthy' },
-    { value: 'Vegetarian', label: 'Vegetarian' }
+    { value: 'protein', label: 'Protein-Rich' },
+    { value: 'carbs', label: 'Carbohydrates' },
+    { value: 'vegetables', label: 'Vegetables' },
+    { value: 'healthy_fats', label: 'Healthy Fats' },
+    { value: 'smoothies', label: 'Smoothies & Drinks' },
+    { value: 'snacks', label: 'Healthy Snacks' }
   ];
 
   useEffect(() => {

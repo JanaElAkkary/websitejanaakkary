@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import axios from '../utils/axios';
 import '../styles/CreateRecipe.css';
 
 function CreateRecipe() {
@@ -10,18 +10,22 @@ function CreateRecipe() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [recipeData, setRecipeData] = useState({
-    recipename: '',
+    title: '',
     description: '',
     ingredients: '',
     instructions: '',
-    timetoprepare: '',
-    cooking_time: '',
+    prep_time: '',
+    cook_time: '',
     servings: '',
-    cuisine: '',
+    cuisine_type: '',
     category: 'protein',
-    difficulty: 'medium',
-    dietary_details: '',
-    image: null
+    difficulty_level: 'medium',
+    dietary_restrictions: '',
+    image_url: null,
+    calories: '',
+    protein: '',
+    carbs: '',
+    fats: ''
   });
 
   // Redirect if not a chef
@@ -45,7 +49,7 @@ function CreateRecipe() {
       reader.onloadend = () => {
         setRecipeData(prev => ({
           ...prev,
-          image: reader.result
+          image_url: reader.result
         }));
       };
       reader.readAsDataURL(file);
@@ -58,23 +62,30 @@ function CreateRecipe() {
     setError('');
 
     try {
-      const formData = new FormData();
-      Object.keys(recipeData).forEach(key => {
-        formData.append(key, recipeData[key]);
-      });
-      formData.append('user_id', user.id);
+      // Format the data
+      const formattedData = {
+        ...recipeData,
+        chef_id: user.id,
+        servings: parseInt(recipeData.servings),
+        calories: parseInt(recipeData.calories),
+        protein: parseFloat(recipeData.protein),
+        carbs: parseFloat(recipeData.carbs),
+        fats: parseFloat(recipeData.fats),
+        // Keep ingredients and instructions as strings
+        ingredients: recipeData.ingredients,
+        instructions: recipeData.instructions
+      };
 
-      const response = await axios.post('/api/recipes', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
-      if (response.data.success) {
+      const response = await axios.post('/api/recipes', formattedData);
+      
+      if (response.data && response.data.recipe_id) {
         navigate('/recipes');
+      } else {
+        throw new Error('Failed to create recipe');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create recipe');
+      console.error('Error creating recipe:', err);
+      setError(err.response?.data?.error || err.message || 'Failed to create recipe');
     } finally {
       setLoading(false);
     }
@@ -91,14 +102,14 @@ function CreateRecipe() {
           <section className="form-section">
             <h2>Basic Information</h2>
             <div className="form-group">
-              <label>Recipe Name</label>
+              <label>Recipe Title</label>
               <input
                 type="text"
-                name="recipename"
-                value={recipeData.recipename}
+                name="title"
+                value={recipeData.title}
                 onChange={handleChange}
                 required
-                placeholder="Enter recipe name"
+                placeholder="Enter recipe title"
               />
             </div>
 
@@ -115,9 +126,9 @@ function CreateRecipe() {
             </div>
 
             <div className="form-group">
-              <label>Cuisine</label>
-              <select name="cuisine" value={recipeData.cuisine} onChange={handleChange} required>
-                <option value="">Select cuisine</option>
+              <label>Cuisine Type</label>
+              <select name="cuisine_type" value={recipeData.cuisine_type} onChange={handleChange} required>
+                <option value="">Select cuisine type</option>
                 <option value="American">American</option>
                 <option value="Italian">Italian</option>
                 <option value="Chinese">Chinese</option>
@@ -144,7 +155,7 @@ function CreateRecipe() {
                 <option value="">Select category</option>
                 <option value="protein">Protein-Rich</option>
                 <option value="carbs">Carbohydrates</option>
-                <option value="vegetables">Vegetables & Greens</option>
+                <option value="vegetables">Vegetables</option>
                 <option value="healthy_fats">Healthy Fats</option>
                 <option value="smoothies">Smoothies & Drinks</option>
                 <option value="snacks">Healthy Snacks</option>
@@ -152,8 +163,8 @@ function CreateRecipe() {
             </div>
 
             <div className="form-group">
-              <label>Difficulty</label>
-              <select name="difficulty" value={recipeData.difficulty} onChange={handleChange} required>
+              <label>Difficulty Level</label>
+              <select name="difficulty_level" value={recipeData.difficulty_level} onChange={handleChange} required>
                 <option value="easy">Easy</option>
                 <option value="medium">Medium</option>
                 <option value="hard">Hard</option>
@@ -161,11 +172,11 @@ function CreateRecipe() {
             </div>
 
             <div className="form-group">
-              <label>Dietary Details</label>
+              <label>Dietary Restrictions</label>
               <input
                 type="text"
-                name="dietary_details"
-                value={recipeData.dietary_details}
+                name="dietary_restrictions"
+                value={recipeData.dietary_restrictions}
                 onChange={handleChange}
                 placeholder="e.g., Vegetarian, Gluten-free, etc."
               />
@@ -179,8 +190,8 @@ function CreateRecipe() {
               <label>Preparation Time</label>
               <input
                 type="text"
-                name="timetoprepare"
-                value={recipeData.timetoprepare}
+                name="prep_time"
+                value={recipeData.prep_time}
                 onChange={handleChange}
                 required
                 placeholder="e.g., 30 minutes"
@@ -191,8 +202,8 @@ function CreateRecipe() {
               <label>Cooking Time</label>
               <input
                 type="text"
-                name="cooking_time"
-                value={recipeData.cooking_time}
+                name="cook_time"
+                value={recipeData.cook_time}
                 onChange={handleChange}
                 required
                 placeholder="e.g., 1 hour"
@@ -223,7 +234,7 @@ function CreateRecipe() {
                 value={recipeData.ingredients}
                 onChange={handleChange}
                 required
-                placeholder="Enter each ingredient on a new line with measurements (e.g., 2 cups flour)"
+                placeholder="Enter each ingredient separated by commas (e.g., 2 cups flour, 1 cup sugar)"
                 rows="6"
               />
             </div>
@@ -241,6 +252,58 @@ function CreateRecipe() {
             </div>
           </section>
 
+          {/* Nutrition Information */}
+          <section className="form-section full-width">
+            <h2>Nutrition Information</h2>
+            <div className="form-group">
+              <label>Calories</label>
+              <input
+                type="number"
+                name="calories"
+                value={recipeData.calories}
+                onChange={handleChange}
+                required
+                placeholder="Enter calories per serving"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Protein</label>
+              <input
+                type="number"
+                name="protein"
+                value={recipeData.protein}
+                onChange={handleChange}
+                required
+                placeholder="Enter protein per serving (in grams)"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Carbohydrates</label>
+              <input
+                type="number"
+                name="carbs"
+                value={recipeData.carbs}
+                onChange={handleChange}
+                required
+                placeholder="Enter carbohydrates per serving (in grams)"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Fats</label>
+              <input
+                type="number"
+                name="fats"
+                value={recipeData.fats}
+                onChange={handleChange}
+                required
+                placeholder="Enter fats per serving (in grams)"
+              />
+            </div>
+          </section>
+
           {/* Image Upload */}
           <section className="form-section full-width">
             <h2>Recipe Image</h2>
@@ -248,14 +311,14 @@ function CreateRecipe() {
               <label>Upload Image</label>
               <input
                 type="file"
-                name="image"
+                name="image_url"
                 onChange={handleImageChange}
                 accept="image/*"
                 className="file-input"
               />
-              {recipeData.image && (
+              {recipeData.image_url && (
                 <div className="image-preview">
-                  <img src={recipeData.image} alt="Recipe preview" />
+                  <img src={recipeData.image_url} alt="Recipe preview" />
                 </div>
               )}
             </div>
